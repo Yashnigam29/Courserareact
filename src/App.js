@@ -5,6 +5,7 @@ import './App.css';
 import Menu from './components/Menucomponent';
 import { DISHES } from './shared/dishes'
 import Menu1 from './components/menucomponent1';
+import DishDetail from './components/dishdetail';
 
 class App extends Component {
   constructor(props){
@@ -23,6 +24,7 @@ class App extends Component {
         </div>
       </Navbar>
       <Menu dishes={this.state.dishes}/>
+
       {/* <Menu1 /> */}
     </div>
   );
