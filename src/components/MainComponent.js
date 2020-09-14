@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import {Navbar, NavbarBrand} from 'reactstrap';
+
 import { DISHES } from '../shared/dishes'
 import DishDetail from './dishdetail';
 import Menu from './Menucomponent';
 import MenuFunction from './functionalMenu';
 import DishDetailFuncion from './functionalDish';
+import Header from './HeaderComonent';
+import Footer from './FooterComponent';
 
 class Main extends Component {
   constructor(props){
@@ -47,11 +49,7 @@ renderDish(dish){
   render(){
   return (
     <div className="App">
-      <Navbar dark color="primary">
-        <div className="container">
-          <NavbarBrand href="/">Resornate  con fusion</NavbarBrand>
-        </div>
-      </Navbar>
+        <Header />
       {/* <Menu dishes={this.state.dishes} 
              onClick={(dishId) => this.onDishSelect(dishId)}/> */}
              <MenuFunction dishes={this.state.dishes} 
@@ -61,6 +59,7 @@ renderDish(dish){
             
        {/* <DishDetail dish={this.state.dishes.filter((dish) => dish.id === this.state.selectedDish )[0]} /> */}
       {/* <Menu1 /> */}
+      <Footer />
     </div>
   );
 }
