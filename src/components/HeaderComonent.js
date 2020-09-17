@@ -1,13 +1,58 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand, Jumbotron } from 'reactstrap';
+import { Navbar, NavbarBrand, Jumbotron, NavItem, Nav, Collapse, NavbarToggler } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 
 class Header extends Component {
+    constructor(props){
+        super(props)
+
+    this.state ={
+        isNavOpen:false
+    }
+    this.toggleNav=this.toggleNav.bind(this);
+    }
+    toggleNav(){
+        this.setState({
+            isNavOpen: !this.state.isNavOpen
+        })
+    }
     render() {
         return (
             <React.Fragment>
-                <Navbar dark >
+                <Navbar dark expand="md">
                     <div className="container">
-                        <NavbarBrand href="/">Resornate  con fusion</NavbarBrand>
+                        <NavbarToggler onClick={this.toggleNav} />
+                        <NavbarBrand className="mr-auto" href="/">
+                            <img  src="assets/images/logo.png" height="30" width="41" alt="Resornate  con fusion" />
+                        </NavbarBrand>
+                        <Collapse isOpen={this.state.isNavOpen} navbar>
+                             <Nav Navbar>
+                                 <NavItem>
+                                     <NavLink className="nav-Link" to="/home">
+                                         <span className="fa fa-home fa-lg"></span>Home
+
+                                     </NavLink>
+                                 </NavItem>
+                                 <NavItem>
+                                     <NavLink className="nav-Link" to="/aboutus">
+                                         <span className="fa fa-info fa-lg"></span>About Us
+
+                                     </NavLink>
+                                 </NavItem>
+                                 <NavItem>
+                                     <NavLink className="nav-Link" to="/menu">
+                                         <span className="fa fa-list fa-lg"></span>Menu
+
+                                     </NavLink>
+                                 </NavItem>
+                                 <NavItem>
+                                     <NavLink className="nav-Link" to="/contactus">
+                                         <span className="fa fa-address-card fa-lg"></span>contact Us
+
+                                     </NavLink>
+                                 </NavItem>
+                             </Nav>
+                             </Collapse>
                     </div>
                 </Navbar>
                 <Jumbotron>
