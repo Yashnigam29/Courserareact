@@ -9,6 +9,12 @@ import Header from './HeaderComonent';
 import Footer from './FooterComponent';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import Home from './HomeComponent';
+import Contact from './contactComponent';
+import { COMMENTS } from '../shared/comments';
+import { LEADERS } from '../shared/leader';
+import { PROMOTIONS } from '../shared/promotion';
+import DishDetailFunction from './functionalDish';
+import About from './AboutComponent';
 
 class Main extends Component {
   constructor(props){
@@ -17,6 +23,9 @@ class Main extends Component {
     this.state={
       dishes: DISHES,
       // selectedDish:null
+      comments:COMMENTS,
+      promotion:PROMOTIONS,
+      leaders:LEADERS
     };
   }
 
@@ -52,8 +61,19 @@ renderDish(dish){
 
     const HomePage=() =>{
        return(
-         <Home />
+         <Home dish={this.state.dishes.filter((dish)=> dish.featured)[0]}
+         leader={this.state.leaders.filter((leader)=> leader.featured)[0]}
+         promotion={this.state.promotion.filter((promotion)=> promotion.featured)[0]}/>
        )
+    }
+
+    const DishwithId=({match})=>{
+      return(
+        <DishDetailFunction dish={this.state.dishes.filter((dish)=> dish.id === parseInt(match.params.dishId,10))[0]}
+        comments={this.state.comments.filter((comment)=>comment.dishId === parseInt(match.params.dishId,10))}
+        />
+      )
+
     }
   return (
     <div className="App">
@@ -61,7 +81,10 @@ renderDish(dish){
 
         <Switch>
           <Route path="/home" component={HomePage}></Route>
-          <Route exact path="/menu" component={()=> <Menu dishes={this.state.dishes} /> } />
+          <Route exact path="/menu" component={()=> <MenuFunction dishes={this.state.dishes} /> } />
+          <Route path="/menu/:dishId" component={DishwithId} />
+          <Route exact path="/contactus" component={Contact} /> 
+          <Route path="/aboutus" component={() => <About leaders={this.state.leaders} /> } />
           <Redirect to="/home" /> 
         </Switch>
 
