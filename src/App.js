@@ -3,9 +3,13 @@ import React, { Component } from 'react';
 import './App.css';
 import Main from './components/MainComponent';
 import { BrowserRouter } from 'react-router-dom';
+import { configureStore } from './Redux/configureStore';
+import { Provider } from 'react-redux';
 // import { DISHES } from './shared/dishes'
 // import Menu1 from './components/menucomponent1';
 // import DishDetail from './components/dishdetail';
+
+const store=configureStore();
 
 class App extends Component {
   // constructor(props){
@@ -15,8 +19,10 @@ class App extends Component {
   //     dishes: DISHES
   //   }
   // }
+  
   render(){
   return (
+    <Provider store={store}>
     <BrowserRouter>
     <div className="App">
       {/* <Navbar dark color="primary">
@@ -29,6 +35,7 @@ class App extends Component {
       {/* <Menu1 /> */}
     </div>
     </BrowserRouter>
+    </Provider>
   );
 }
 }
