@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Card, CardImg,  CardTitle, CardBody, CardText, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { Card, CardImg, CardTitle, CardBody, CardText, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Label, Button, Modal, ModalHeader, ModalBody, Row } from 'reactstrap';
 import { Control, Errors, LocalForm } from 'react-redux-form';
 import { Loading } from './loadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const maxlength = (len) => (val) => !(val) || (val.length <= len);
@@ -30,13 +31,14 @@ class Commentsform extends Component {
     handleSubmit(values) {
         // console.log("current state" + JSON.stringify(values));
         // alert("current state" + JSON.stringify(values));
-         this.props.postComment(this.props.dishId, values.rating, values.author,values.comment)
+        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment)
     }
 
     render() {
 
         return (
             <div className="container">
+
                 <LocalForm >
                     <Row className="form-group" >
                         <Button outline onClick={this.togglesubmit}>
@@ -85,25 +87,31 @@ class Commentsform extends Component {
 }
 
 
-function Rendercomments({ comments, postComment,dishId }) {
+function Rendercomments({ comments, postComment, dishId }) {
     if (comments != null) {
         return (
             <div className="col-12 col-md-5 m-1">
                 <h4>comments</h4>
                 <ul className="lis.unstyled">
-                    {comments.map((comment) => {
-                        return (
-                            <li key={comment.id}>
-                                <p>
-                                    {comment.comment}
-                                </p>
-                                <p>-- {comment.author} </p>
+                    <Stagger in >
+                        {comments.map((comment) => {
+                            return (
+                                <Fade in>
+                                    <li key={comment.id}>
+                                        <p>
+                                            {comment.comment}
+                                        </p>
+                                        <p>-- {comment.author} </p>
 
-                            </li>
-                        )
-                    })}
+                                    </li>
+                                </Fade>
+                            )
+                        })}
+                    </Stagger>
+
                 </ul>
-                <Commentsform dishId={dishId} postComment={postComment}/>
+
+                <Commentsform dishId={dishId} postComment={postComment} />
             </div>
         )
     }
@@ -121,8 +129,8 @@ const DishDetailFunction = (props) => {
 
     console.log("dishdetail  render invoke")
     const SelectedItem = props.dish
-    if(props.isLoading){
-        return(
+    if (props.isLoading) {
+        return (
             <div className="container">
                 <div className="row">
                     <Loading />
@@ -130,62 +138,67 @@ const DishDetailFunction = (props) => {
             </div>
         )
     }
-    else if(props.errMess){
-        return(
+    else if (props.errMess) {
+        return (
             <div className="container">
                 <div className="row">
-        <h4>{props.errMess}</h4>
+                    <h4>{props.errMess}</h4>
                 </div>
             </div>
         )
 
     }
-    else if(SelectedItem !=null){
-    return (
-        <div className="container">
-            <div className="row">
-                <Breadcrumb>
+    else if (SelectedItem != null) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
                         <BreadcrumbItem>
-                        <Link to="/menu">menu</Link>
+                            <Link to="/menu">menu</Link>
                         </BreadcrumbItem>
-                    <BreadcrumbItem acive>{props.dish.name}</BreadcrumbItem>
+                        <BreadcrumbItem acive>{props.dish.name}</BreadcrumbItem>
 
-                </Breadcrumb>
-                <div className="col-12">
-                    <h3>{props.dish.name}</h3>
-                    <hr />
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{props.dish.name}</h3>
+                        <hr />
+                    </div>
                 </div>
+                <div className="row">
+                    <div key={SelectedItem.id} className="col-sm-6 col-md-5 m-1">
+                        <FadeTransform in
+                            transformProps={{
+                                exitTransform: 'scale(0.5) translateY(-50%)'
+                            }}>
+                            <Card>
+
+                                <CardImg width="100%" object src={baseUrl + SelectedItem.image} alt={SelectedItem.name} />
+                                <CardBody>
+                                    <CardTitle>{SelectedItem.name}</CardTitle>
+                                    <CardText> {SelectedItem.description}</CardText>
+                                </CardBody>
+
+                            </Card>
+                        </FadeTransform>
+                    </div>
+                    <div className="col-sm-6 col-md-6 m-1">
+
+                        <Rendercomments comments={props.comments}
+                            postComment={props.postComment}
+                            dishId={props.dish.id} />
+
+                    </div>
+                </div>
+
+
+
             </div>
-            <div className="row">
-                <div key={SelectedItem.id} className="col-sm-6 col-md-5 m-1">
-                    <Card>
-
-                        <CardImg width="100%" object src={baseUrl + SelectedItem.image} alt={SelectedItem.name} />
-                        <CardBody>
-                            <CardTitle>{SelectedItem.name}</CardTitle>
-                            <CardText> {SelectedItem.description}</CardText>
-                        </CardBody>
-
-                    </Card>
-                </div>
-                <div className="col-sm-6 col-md-6 m-1">
-
-                    <Rendercomments comments={props.comments} 
-                    postComment={props.postComment}
-                    dishId={props.dish.id}/>
-                    
-                </div>
-            </div>
-
-
-
-        </div>
-    )
-}
-else
-    return(
-        <div></div>
-    )
+        )
+    }
+    else
+        return (
+            <div></div>
+        )
 }
 
 
