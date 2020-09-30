@@ -16,8 +16,9 @@ import DishDetailFunction from './functionalDish';
 import About from './AboutComponent';
 import { connect } from 'react-redux';
 import ContactReduxComponent from './ContactReduxComponent';
-import { addComment, fetchComments, fetchDishes, fetchPromos } from '../Redux/ActionCreator';
+import { postComment, fetchComments, fetchDishes, fetchPromos } from '../Redux/ActionCreator';
 import { actions } from 'react-redux-form';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const mapStateToProps = state =>{
       return{
@@ -29,7 +30,7 @@ const mapStateToProps = state =>{
 }
 
 const mapDispatchToProps = (dispatch) =>({
-  addComment:(dishId,rating,author,comment) => dispatch(addComment(dishId,rating,author,comment)),
+  postComment:(dishId,rating,author,comment) => dispatch(postComment(dishId,rating,author,comment)),
   fetchDishes: () =>{dispatch(fetchDishes())},
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
   fetchComments: () =>{dispatch(fetchComments())},
@@ -105,7 +106,7 @@ componentDidMount(){
          errMess={this.props.dishes.errMess}
         comments={this.props.comments.comments.filter((comment)=>comment.dishId === parseInt(match.params.dishId,10))}
         commentsErrMess={this.props.comments.errMess}
-        addComment={this.props.addComment}
+        postComment={this.props.postComment}
         />
       )
 
@@ -113,7 +114,8 @@ componentDidMount(){
   return (
     <div className="App">
         <Header />
-
+        <TransitionGroup>
+        <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
         <Switch>
           <Route path="/home" component={HomePage}></Route>
           <Route exact path="/menu" component={()=> <MenuFunction dishes={this.props.dishes} /> } />
@@ -122,6 +124,8 @@ componentDidMount(){
           <Route path="/aboutus" component={() => <About leaders={this.props.leaders} /> } />
           <Redirect to="/home" /> 
         </Switch>
+        </CSSTransition>
+        </TransitionGroup>
 
 
 
