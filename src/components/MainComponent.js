@@ -16,7 +16,7 @@ import DishDetailFunction from './functionalDish';
 import About from './AboutComponent';
 import { connect } from 'react-redux';
 import ContactReduxComponent from './ContactReduxComponent';
-import { postComment, fetchComments, fetchDishes, fetchPromos } from '../Redux/ActionCreator';
+import { postComment, fetchComments, fetchDishes, fetchPromos,fetchLeaders , postFeedback} from '../Redux/ActionCreator';
 import { actions } from 'react-redux-form';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
@@ -31,11 +31,12 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = (dispatch) =>({
   postComment:(dishId,rating,author,comment) => dispatch(postComment(dishId,rating,author,comment)),
+  postFeedback:(firstname,lastname,telnum,email,agree,contactType,message)=> dispatch(postFeedback(firstname,lastname,telnum,email,agree,contactType,message)),
   fetchDishes: () =>{dispatch(fetchDishes())},
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
   fetchComments: () =>{dispatch(fetchComments())},
   fetchPromos: () =>{dispatch(fetchPromos())},
-
+  fetchLeaders: () =>{dispatch(fetchLeaders())}
 })
 class Main extends Component {
   constructor(props){
@@ -59,6 +60,7 @@ componentDidMount(){
   this.props.fetchDishes();
   this.props.fetchComments();
   this.props.fetchPromos();
+  this.props.fetchLeaders();
 }
 
 // renderDish(dish){
@@ -91,7 +93,9 @@ componentDidMount(){
          <Home dish={this.props.dishes.dishes.filter((dish)=> dish.featured)[0]}
          dishesLoading={this.props.dishes.isLoading}
          dishesErrMess={this.props.dishes.errMess}
-         leader={this.props.leaders.filter((leader)=> leader.featured)[0]}
+         leader={this.props.leaders.leaders.filter((leader)=> leader.featured)[0]}
+         leadersLoading={this.props.leaders.isLoading}
+         leadersErrMess={this.props.leaders.errMess}
          promotion={this.props.promotions.promotions.filter((promotion)=> promotion.featured)[0]}
          promosLoading={this.props.promotions.isLoading}
          promosErrMess={this.props.promotions.errMess}/>
@@ -120,7 +124,7 @@ componentDidMount(){
           <Route path="/home" component={HomePage}></Route>
           <Route exact path="/menu" component={()=> <MenuFunction dishes={this.props.dishes} /> } />
           <Route path="/menu/:dishId" component={DishwithId} />
-          <Route exact path="/contactus" component={() => <ContactReduxComponent resetFeedbackForm={this.props.resetFeedbackForm} />} />  
+          <Route exact path="/contactus" component={() => <ContactReduxComponent postFeedback={this.props.postFeedback} resetFeedbackForm={this.props.resetFeedbackForm}/>} />  
           <Route path="/aboutus" component={() => <About leaders={this.props.leaders} /> } />
           <Redirect to="/home" /> 
         </Switch>

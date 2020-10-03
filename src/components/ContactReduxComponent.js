@@ -20,8 +20,9 @@ class ContactReduxComponent extends Component {
 
     handleSubmit(values) {
         console.log("current state" + JSON.stringify(values));
-        alert("current state" + JSON.stringify(values));
+        this.props.postFeedback(values.firstname,values.lastname,values.telnum,values.email,values.agree,values.contactType,values.message);
         this.props.resetFeedbackForm();
+        
     }
 
     render() {
